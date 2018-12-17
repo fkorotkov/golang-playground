@@ -1,4 +1,4 @@
-package golang_playground
+package main
 
 import (
 	"crypto/tls"

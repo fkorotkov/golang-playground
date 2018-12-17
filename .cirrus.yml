@@ -6,4 +6,6 @@ test_task:
     CIRRUS_WORKING_DIR: /go/src/github.com/$CIRRUS_REPO_FULL_NAME
   printenv_script: printenv
   get_script: go get -t -v ./...
+  build_script: go build
   test_script: go test -v ./...
+  deploy_script: ./scripts/deploy.sh
