@@ -1,14 +1,20 @@
 container:
-  image: golang:latest
-
-env:
-  GITHUB_TOKEN: ENCRYPTED[700ce0ed7d88a32de654c6ef38ae864588aca9531bbe1e306d090ff463434983ac0eaed655b62002e52e0492c6427b78]
+  image: apline:latest
 
 test_task:
   env:
-    CIRRUS_WORKING_DIR: /go/src/github.com/$CIRRUS_REPO_FULL_NAME
-  printenv_script: printenv
-  get_script: go get -t -v ./...
-  build_script: go build
-  test_script: go test -v ./...
-  deploy_script: ./scripts/deploy.sh
+    GOPROXY: https://proxy.golang.org
+    GOPATH: /tmp/go
+    PATH: ${GOPATH}/bin:${PATH}
+    CIRRUS_WORKING_DIR: /tmp/go/src/github.com/${CIRRUS_REPO_FULL_NAME}
+  install_script:
+      - apk add go git
+  clone_script: |
+      if [[ -z "$CIRRUS_PR" ]]; then
+        git clone --recursive --branch=$CIRRUS_BRANCH https://x-access-token:${CIRRUS_REPO_CLONE_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git ${CIRRUS_WORKING_DIR}
+        git reset --hard $CIRRUS_CHANGE_IN_REPO
+      else
+        git clone --recursive https://x-access-token:${CIRRUS_REPO_CLONE_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git ${CIRRUS_WORKING_DIR}
+        git fetch origin pull/$CIRRUS_PR/head:pull/$CIRRUS_PR
+        git reset --hard $CIRRUS_CHANGE_IN_REPO
+      fi
