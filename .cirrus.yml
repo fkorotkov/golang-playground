@@ -1,14 +1,17 @@
-container:
-  image: golang:latest
-
 env:
   GITHUB_TOKEN: ENCRYPTED[d5a8d2c87e313b77bc7426d6fcb90059d4f86d6d57077130ea716f5b15845d29760ddaa91c562aad087d2aba710b7cd4]
 
 test_task:
+  matrix:
+    - container:
+        image: golang:latest
+    - freebsd_instance:
+        image_family: freebsd-13-0-snap
+      install_go_scriopt: pkg install -y golang
   env:
     CIRRUS_WORKING_DIR: /go/src/github.com/$CIRRUS_REPO_FULL_NAME
   printenv_script: printenv
   get_script: go get -t -v ./...
-  build_script: go build
+  build_script: go build -o golang-playground-$CIRRUS_OS
   test_script: go test -v ./...
   deploy_script: ./scripts/deploy.sh

@@ -12,7 +12,7 @@ fi
 
 file_content_type="application/octet-stream"
 files_to_upload=(
-  "golang-playground"
+  "golang-playground-$CIRRUS_OS"
 )
 
 for fpath in $files_to_upload
