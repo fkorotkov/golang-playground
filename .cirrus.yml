@@ -7,7 +7,7 @@ test_task:
         image: golang:latest
     - freebsd_instance:
         image_family: freebsd-13-0-snap
-      install_go_scriopt: pkg install -y golang
+      install_go_script: pkg install -y golang
   env:
     CIRRUS_WORKING_DIR: /go/src/github.com/$CIRRUS_REPO_FULL_NAME
   printenv_script: printenv
